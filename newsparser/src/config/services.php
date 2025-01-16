@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'newsapiorg' => [
+        'url' => env('NEWSAPIORG_API_URL'),
+        'key' => env('NEWSAPIORG_API_KEY')
+    ]
 
 ];
