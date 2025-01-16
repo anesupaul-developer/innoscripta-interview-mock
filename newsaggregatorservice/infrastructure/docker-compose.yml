@@ -1,0 +1,52 @@
+version: "3.7"
+
+networks:
+  news-app-network:
+
+services:
+  mysql:
+    image: mariadb:10.4
+    container_name: newsmysql
+    restart: unless-stopped
+    tty: true
+    ports:
+      -  "3307:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - news-app-network
+  php:
+    build:
+      args:
+        user: taylor
+        uid: 1000
+      context: .
+      dockerfile: ./php/Dockerfile
+    container_name: newsphp
+    ports:
+      - "9000:9000"
+    volumes:
+      -   ../src:/var/www/html
+    networks:
+      - news-app-network
+  nginx:
+    image: nginx:1.17-alpine
+    container_name: newsnginx
+    ports:
+      - "8088:80"
+      - "443:443"
+    volumes:
+      - ../src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - news-app-network
