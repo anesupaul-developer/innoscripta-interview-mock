@@ -22,7 +22,12 @@ RUN sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.con
 RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.conf
 RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
 
+RUN apk --no-cache add build-base autoconf g++ make
+RUN pecl install amqp
+RUN docker-php-ext-enable amqp
 RUN docker-php-ext-install pdo pdo_mysql
+RUN rm -rf /tmp/pear
+RUN apk del autoconf g++ make;
     
 USER laravel
 
