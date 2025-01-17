@@ -33,23 +33,21 @@ class GetNewsApiOrgArticles extends Command
      */
     public function handle()
     {
-//        $data = [
-//            'country' => 'us',
-//            'apiKey' => config('services.newsapiorg.key')
-//        ];
-//
-//        $url = Str::of(config('services.newsapiorg.url'))->append('?')->append(http_build_query($data));
-//
-//        $response = Http::get($url);
-//
-//        if ($response->successful()) {
-//            $articles = $response->json()['articles'];
-//
-//            foreach($articles as $article) {
-//                $this->apiOrgService->send($article);
-//            }
-//        }
+        $data = [
+            'country' => 'us',
+            'apiKey' => config('services.newsapiorg.key')
+        ];
 
-        $this->apiOrgService->send(['id' => 1]);
+        $url = Str::of(config('services.newsapiorg.url'))->append('?')->append(http_build_query($data));
+
+        $response = Http::get($url);
+
+        if ($response->successful()) {
+            $articles = $response->json()['articles'];
+
+            foreach($articles as $article) {
+                $this->apiOrgService->send($article);
+            }
+        }
     }
 }
