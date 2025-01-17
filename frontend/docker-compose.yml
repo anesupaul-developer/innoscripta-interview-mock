@@ -2,7 +2,7 @@ version: '3'
 
 networks:
   laravel:
-
+    driver: bridge
 
 services:
   app:
@@ -19,7 +19,6 @@ services:
     depends_on:
       - php
       - mysql
-      - rabbitmq
       - mailhog
     networks:
       - laravel
@@ -37,14 +36,6 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-    networks:
-      - laravel
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
     networks:
       - laravel
 
@@ -84,7 +75,7 @@ services:
     ports:
       - "3000:3000"
       - "3001:3001"
-      - "5173:5173"
+      - "5171:5173"
     working_dir: /var/www/html
     entrypoint: [ 'npm' ]
     networks:

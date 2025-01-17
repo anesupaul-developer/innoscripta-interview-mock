@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Jobs\ArticleParser;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

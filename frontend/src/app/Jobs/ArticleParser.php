@@ -9,12 +9,9 @@ class ArticleParser implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct()
+    public function __construct(public array $article)
     {
-        //
+
     }
 
     /**
@@ -22,6 +19,6 @@ class ArticleParser implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        echo "Hello from frontend".PHP_EOL;
     }
 }

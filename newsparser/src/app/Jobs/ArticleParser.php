@@ -9,14 +9,9 @@ class ArticleParser implements ShouldQueue
 {
     use Queueable;
 
-    private array $article;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(mixed $data)
+    public function __construct($data)
     {
-        $this->article = $data;
+
     }
 
     /**
@@ -24,6 +19,6 @@ class ArticleParser implements ShouldQueue
      */
     public function handle(): void
     {
-        dd("Event handled successfully");
+        echo "Hello from NewsParser";
     }
 }
