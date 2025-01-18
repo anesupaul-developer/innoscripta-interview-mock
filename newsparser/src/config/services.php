@@ -36,17 +36,17 @@ return [
     ],
     'newsapiorg' => [
         'url' => env('NEWSAPIORG_API_URL'),
-        'key' => env('NEWSAPIORG_API_KEY')
+        'key' => env('NEWSAPIORG_API_KEY'),
     ],
 
     'guardianapis' => [
         'url' => env('GUARDIAN_API_URL'),
-        'key' => env('GUARDIAN_API_KEY')
+        'key' => env('GUARDIAN_API_KEY'),
     ],
 
     'newyorktimes' => [
         'url' => env('NEWYORK_TIMES_API_URL'),
-        'key' => env('NEWYORK_TIMES_API_KEY')
-    ]
+        'key' => env('NEWYORK_TIMES_API_KEY'),
+    ],
 
 ];

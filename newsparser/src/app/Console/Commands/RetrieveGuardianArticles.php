@@ -2,39 +2,36 @@
 
 namespace App\Console\Commands;
 
-use App\Services\GuardianApiService;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use App\Jobs\OnNewArticleGenerated;
+use Carbon\Carbon;
 
-class RetrieveGuardianArticles extends Command
+class RetrieveGuardianArticles extends HttpArticle
 {
     protected $signature = 'app:guardian-articles';
 
     protected $description = 'Fetch guardian news articles';
 
-    public function __construct(public GuardianApiService $apiOrgService)
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
-        $data = [
-            'page' => 1,
-            'api-key' => config('services.guardianapis.key')
-        ];
+        $items = $this->getArticles();
 
-        $url = Str::of(config('services.guardianapis.url'))->append('?')->append(http_build_query($data));
+        foreach ($items as $payload) {
+            $article = [
+                'source' => 'Guardian',
+                'author' => null,
+                'title' => $payload['webTitle'],
+                'description' => $payload['sectionName'],
+                'url' => $payload['webUrl'],
+                'image_url' => null,
+                'published_at' => Carbon::parse($payload['webPublicationDate'])->format('Y-m-d H:i:s'),
+            ];
 
-        $response = Http::get($url);
-
-        if ($response->successful()) {
-            $articles = $response->json()['response']['results'];
-
-            foreach ($articles as $article) {
-                $this->apiOrgService->send($article);
-            }
+            OnNewArticleGenerated::dispatch($article);
         }
+    }
+
+    public function getProviderName(): string
+    {
+        return 'guardianapis';
     }
 }

@@ -5,11 +5,11 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class ArticleParser implements ShouldQueue
+class OnNewArticleGenerated implements ShouldQueue
 {
     use Queueable;
 
-    public $data;
+    public mixed $data;
 
     public function __construct($data)
     {
@@ -21,6 +21,6 @@ class ArticleParser implements ShouldQueue
      */
     public function handle(): void
     {
-        echo 'Hello from NewsParser'.PHP_EOL;
+        echo 'Hello from NewsParser MicroService'.PHP_EOL;
     }
 }

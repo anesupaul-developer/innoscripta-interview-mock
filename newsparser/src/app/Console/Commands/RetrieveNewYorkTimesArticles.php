@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Services\GuardianApiService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -13,16 +12,11 @@ class RetrieveNewYorkTimesArticles extends Command
 
     protected $description = 'Fetch new york times news articles';
 
-    public function __construct(public GuardianApiService $apiOrgService)
-    {
-        parent::__construct();
-    }
-
     public function handle()
     {
         $data = [
             'page' => 1,
-            'api-key' => config('services.newyorktimes.key')
+            'api-key' => config('services.newyorktimes.key'),
         ];
 
         $url = Str::of(config('services.newyorktimes.url'))->append('?')->append(http_build_query($data));
