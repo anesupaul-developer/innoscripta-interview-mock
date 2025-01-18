@@ -93,8 +93,8 @@ export default {
         onMounted(async () => {
             try {
                 const [postsResponse, categoriesResponse] = await Promise.all([
-                    axios.get('https://your-api-url.com/posts'),
-                    axios.get('https://your-api-url.com/categories'),
+                    axios.get('http://localhost:8081/api/v1/articles?perPage=10'),
+                    axios.get('http://localhost:8081/api/v1/categories'),
                 ]);
                 posts.value = postsResponse.data;
                 categories.value = categoriesResponse.data;

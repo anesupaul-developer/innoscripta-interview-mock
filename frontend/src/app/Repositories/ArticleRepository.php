@@ -7,23 +7,30 @@ use App\Models\Article as ArticleModel;
 
 class ArticleRepository implements ArticleRepositoryInterface
 {
-    public function index(){
-        return ArticleModel::all();
+    public function index()
+    {
+        $perPage = request()->query('perPage') ?? 9;
+
+        return ArticleModel::paginate($perPage);
     }
 
-    public function getById($id){
+    public function getById($id)
+    {
         return ArticleModel::findOrFail($id);
     }
 
-    public function store(array $data){
+    public function store(array $data)
+    {
         return ArticleModel::create($data);
     }
 
-    public function update(array $data,$id){
+    public function update(array $data, $id)
+    {
         return ArticleModel::whereId($id)->update($data);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         ArticleModel::destroy($id);
     }
 }
