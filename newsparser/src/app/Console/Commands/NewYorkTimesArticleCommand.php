@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\OnNewArticleGenerated;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class NewYorkTimesArticleCommand extends ArticleCommand
 {
@@ -15,23 +16,42 @@ class NewYorkTimesArticleCommand extends ArticleCommand
     {
         $items = $this->getArticles();
 
-        foreach ($items as $payload) {
-            $article = [
-                'source' => 'Guardian',
-                'author' => null,
-                'title' => $payload['webTitle'],
-                'description' => $payload['sectionName'],
-                'url' => $payload['webUrl'],
-                'image_url' => null,
-                'published_at' => Carbon::parse($payload['webPublicationDate'])->format('Y-m-d H:i:s'),
-            ];
+        if (isset($items['response']['docs'])) {
+            foreach ($items['response']['docs'] as $payload) {
+                $imgBaseUrl = 'https://static01.nyt.com/';
 
-            OnNewArticleGenerated::dispatch($article);
+                $path = collect($payload['multimedia'])->first()['url'];
+                $article = [
+                    'source' => $payload['source'],
+                    'author' => $payload['byline']['original'],
+                    'title' => $payload['abstract'],
+                    'description' => $payload['lead_paragraph'],
+                    'url' => $payload['web_url'],
+                    'image_url' => str($imgBaseUrl)->append($path)->toString(),
+                    'published_at' => Carbon::parse($payload['pub_date'])->format('Y-m-d H:i:s'),
+                ];
+
+                OnNewArticleGenerated::dispatch($article);
+            }
         }
     }
 
     public function getProviderName(): string
     {
         return 'newyorktimes';
+    }
+
+    public function getQueryParams(): array
+    {
+        $cachingKey = Carbon::now()->startOfDay()->getTimestamp().'-'.$this->getProviderName();
+
+        $page = Cache::remember($cachingKey, 24*60*60, function () use($cachingKey) {
+            return intval(Cache::get($cachingKey)) + 1;
+        });
+
+        return [
+            'api-key' => config('services.'.$this->getProviderName().'.key'),
+            'page' => $page
+        ];
     }
 }

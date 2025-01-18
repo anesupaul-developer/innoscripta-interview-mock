@@ -15,23 +15,37 @@ class NewsApiArticleCommand extends ArticleCommand
     {
         $items = $this->getArticles();
 
-        foreach ($items as $payload) {
-            $article = [
-                'source' => $payload['source']['name'],
-                'author' => $payload['author'],
-                'title' => $payload['title'],
-                'description' => $payload['description'],
-                'url' => $payload['url'],
-                'image_url' => $payload['urlToImage'],
-                'published_at' => Carbon::parse($payload['publishedAt'])->format('Y-m-d H:i:s'),
-            ];
+        if (isset($items['articles'])) {
+            foreach ($items['articles'] as $payload) {
+                $article = [
+                    'source' => $payload['source']['name'],
+                    'author' => $payload['author'],
+                    'title' => $payload['title'],
+                    'description' => $payload['description'],
+                    'url' => $payload['url'],
+                    'image_url' => $payload['urlToImage'],
+                    'published_at' => Carbon::parse($payload['publishedAt'])->format('Y-m-d H:i:s'),
+                ];
 
-            OnNewArticleGenerated::dispatch($article);
+                OnNewArticleGenerated::dispatch($article);
+            }
         }
     }
 
     public function getProviderName(): string
     {
         return 'newsapiorg';
+    }
+
+    public function getQueryParams(): array
+    {
+        return [
+            'page' => 1,
+            'apiKey' => config('services.'.$this->getProviderName().'.key'),
+            'q' => '',
+            'sources' => '',
+            'language' => '',
+            'country' => 'us'
+        ];
     }
 }
