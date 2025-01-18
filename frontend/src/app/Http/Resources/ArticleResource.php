@@ -34,7 +34,7 @@ class ArticleResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'url' => $this->url,
-            'image_url' => $this->image_url,
+            'image_url' => ! empty($this->image_url) ? $this->image_url : url('images/blank.jpeg'),
             'published_at' => Carbon::createFromTimestamp($this->published_at)->format('Y-m-d'),
         ];
     }

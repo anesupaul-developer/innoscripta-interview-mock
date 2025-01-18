@@ -11,6 +11,10 @@ class ArticleRepository implements ArticleRepositoryInterface
     {
         $perPage = request()->query('perPage') ?? 9;
 
+        $category = request()->query('category');
+
+        $search = request()->query('q');
+
         return ArticleModel::paginate($perPage);
     }
 

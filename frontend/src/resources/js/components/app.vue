@@ -2,10 +2,10 @@
     <div class="blog">
         <div class="w-full mt-3 mb-3">
             <form class="max-w-sm mx-auto">
-                <label for="categories" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label for="categories" class="block mb-2 text-md font-medium text-gray-900 dark:text-white">
                     Select your favourite categories
                 </label>
-                <select id="categories" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select id="categories" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value="">All Categories</option>
                     <option v-for="category in categories" :key="category" :value="category">
                         {{ category }}
@@ -32,20 +32,21 @@
 
         <div class="posts">
             <div
-                v-for="post in filteredPosts"
+                v-for="post in posts"
                 :key="post.id"
                 class=""
             >
                 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="#">
-                        <img class="rounded-t-lg" src="https://flowbite.com/docs/images/blog/image-1.jpg" alt="" />
+                        <img class="rounded-t-lg w-full h-auto" :src=post.image_url alt="Image" />
                     </a>
+
                     <div class="p-5">
                         <a href="#">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{post.title}}</h5>
                         </a>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                        <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{post.description}}</p>
+                        <a target="_blank" href="{{post.url}}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
                             Read more
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -76,7 +77,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
 import axios from 'axios';
 
 export default {
@@ -87,7 +88,8 @@ export default {
         const searchQuery = ref('');
         const selectedCategory = ref('');
         const currentPage = ref(1);
-        const postsPerPage = 3;
+        const postsPerPage = ref(9);
+        const postObject = ref([]);
 
         // Fetch data on mount
         onMounted(async () => {
@@ -96,38 +98,50 @@ export default {
                     axios.get('http://localhost:8081/api/v1/articles?perPage=10'),
                     axios.get('http://localhost:8081/api/v1/categories'),
                 ]);
-                posts.value = postsResponse.data;
+
+                postObject.value = postsResponse.data;
+                posts.value = postObject.value.items;
                 categories.value = categoriesResponse.data;
+
+                postsPerPage.value = posts.value.per_page;
+                currentPage.value = posts.value.current_page;
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         });
 
-        // Computed properties for filtered posts and total pages
-        const filteredPosts = computed(() => {
-            let filtered = posts.value;
-
-            // Search functionality
-            if (searchQuery.value) {
-                filtered = filtered.filter(post =>
-                    post.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-                );
-            }
-
-            // Filter by category
-            if (selectedCategory.value) {
-                filtered = filtered.filter(post => post.category.name === selectedCategory.value);
-            }
-
-            const start = (currentPage.value - 1) * postsPerPage;
-            const end = currentPage.value * postsPerPage;
-            return filtered.slice(start, end);
-        });
-
         const totalPages = computed(() => {
-            const filtered = filteredPosts.value;
-            return Math.ceil(filtered.length / postsPerPage);
+            const filtered = posts.value;
+            return Math.ceil(filtered.length / postsPerPage.value);
         });
+
+        watch(searchQuery, (newQuery) => {
+            if (newQuery) {
+                getFilteredArticles(newQuery, '');
+            }
+        });
+
+        watch(selectedCategory, (newQuery) => {
+            if (newQuery) {
+                getFilteredArticles('', newQuery);
+            }
+        });
+
+        const getFilteredArticles = async (query, category) => {
+            try {
+                const [postsResponse] = await Promise.all([
+                    axios.get('http://localhost:8081/api/v1/articles?perPage=9&q='+query+'&category='+category),
+                ]);
+
+                posts.value = postsResponse.data;
+
+                postsPerPage.value = postsResponse.data.per_page;
+                currentPage.value = postsResponse.data.current_page;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
 
         return {
             posts,
@@ -135,7 +149,6 @@ export default {
             searchQuery,
             selectedCategory,
             currentPage,
-            filteredPosts,
             totalPages,
         };
     },
