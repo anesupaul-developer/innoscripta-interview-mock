@@ -14,7 +14,7 @@ services:
         - GID=${GID:-1000}
     ports:
       - "8081:80"
-      - "5173:5173"
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     volumes:
       - ./src:/var/www/html:delegated
     depends_on:
@@ -76,7 +76,6 @@ services:
     ports:
       - "3000:3000"
       - "3001:3001"
-      - "5171:5173"
     working_dir: /var/www/html
     entrypoint: [ 'npm' ]
     networks:
