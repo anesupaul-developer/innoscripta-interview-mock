@@ -2,10 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Models\Article;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ArticleParser implements ShouldQueue
+class OnNewArticleGenerated implements ShouldQueue
 {
     public mixed $payload = [];
 

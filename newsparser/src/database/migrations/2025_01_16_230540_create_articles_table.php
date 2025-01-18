@@ -20,7 +20,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('url')->nullable();
             $table->string('image_url')->nullable();
-            $table->timestamp('published_at');
+            $table->unsignedBigInteger('published_at');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

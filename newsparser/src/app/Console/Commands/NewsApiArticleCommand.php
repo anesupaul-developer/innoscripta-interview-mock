@@ -24,7 +24,7 @@ class NewsApiArticleCommand extends ArticleCommand
                     'description' => $payload['description'],
                     'url' => $payload['url'],
                     'image_url' => $payload['urlToImage'],
-                    'published_at' => Carbon::parse($payload['publishedAt'])->format('Y-m-d H:i:s'),
+                    'published_at' => Carbon::parse($payload['publishedAt'])->getTimestamp(),
                 ];
 
                 OnNewArticleGenerated::dispatch($article);
@@ -45,7 +45,7 @@ class NewsApiArticleCommand extends ArticleCommand
             'q' => '',
             'sources' => '',
             'language' => '',
-            'country' => 'us'
+            'country' => 'us',
         ];
     }
 }
