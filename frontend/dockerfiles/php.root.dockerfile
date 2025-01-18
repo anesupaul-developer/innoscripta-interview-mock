@@ -19,4 +19,6 @@ RUN apk del autoconf g++ make;
     
 USER root
 
+EXPOSE 5173
+
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]

@@ -31,4 +31,6 @@ RUN apk del autoconf g++ make;
     
 USER laravel
 
+EXPOSE 5173
+
 CMD ["php-fpm", "-y", "/usr/local/etc/php-fpm.conf", "-R"]
