@@ -22,6 +22,7 @@ class GuardianArticleCommand extends ArticleCommand
                     'source' => 'Guardian',
                     'author' => null,
                     'title' => $payload['webTitle'],
+                    'category' => $payload['pillarName'],
                     'description' => $payload['sectionName'],
                     'url' => $payload['webUrl'],
                     'image_url' => null,

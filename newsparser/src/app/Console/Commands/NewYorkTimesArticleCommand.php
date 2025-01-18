@@ -26,6 +26,7 @@ class NewYorkTimesArticleCommand extends ArticleCommand
                     'author' => $payload['byline']['original'],
                     'title' => $payload['abstract'],
                     'description' => $payload['lead_paragraph'],
+                    'category' => $payload['type_of_material'],
                     'url' => $payload['web_url'],
                     'image_url' => str($imgBaseUrl)->append($path)->toString(),
                     'published_at' => Carbon::parse($payload['pub_date'])->format('Y-m-d H:i:s'),

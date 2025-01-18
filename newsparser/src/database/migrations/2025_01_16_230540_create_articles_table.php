@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('source')->nullable();
             $table->string('author')->nullable();
             $table->string('title');
+            $table->string('category')->nullable();
             $table->longText('description');
             $table->string('url')->nullable();
             $table->string('image_url')->nullable();
