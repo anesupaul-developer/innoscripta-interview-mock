@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\OnNewArticleGenerated;
 use Carbon\Carbon;
 
-class RetrieveApiOrgArticles extends HttpArticle
+class NewsApiArticleCommand extends ArticleCommand
 {
     protected $signature = 'app:news-org-articles';
 

@@ -1,8 +1,17 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\GuardianArticleCommand;
+use App\Console\Commands\NewsApiArticleCommand;
+use App\Console\Commands\NewYorkTimesArticleCommand;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote')->hourly();
+Schedule::command(GuardianArticleCommand::class)
+    ->withoutOverlapping()
+    ->daily();
+
+Schedule::command(NewsApiArticleCommand::class)
+    ->withoutOverlapping()
+    ->daily();
+
+Schedule::command(NewYorkTimesArticleCommand::class)
+    ->withoutOverlapping()
+    ->daily();

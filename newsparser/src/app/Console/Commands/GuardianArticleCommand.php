@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Jobs\OnNewArticleGenerated;
 use Carbon\Carbon;
 
-class RetrieveGuardianArticles extends HttpArticle
+class GuardianArticleCommand extends ArticleCommand
 {
     protected $signature = 'app:guardian-articles';
 

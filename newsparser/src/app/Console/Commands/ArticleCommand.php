@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-abstract class HttpArticle extends Command
+abstract class ArticleCommand extends Command
 {
     protected function getArticles()
     {
