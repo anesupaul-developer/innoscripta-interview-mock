@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Jobs\ArticleParser;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        app()->bindMethod(ArticleParser::class. '@handle', fn($job) => $job->handle());
+        App::bindMethod(ArticleParser::class, function($job) {
+            return $job->handle();
+        });
+
+        // app()->bindMethod(ArticleParser::class. '@handle', fn($job) => $job->handle());
     }
 }

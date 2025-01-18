@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Contracts\ArticleReaderInterface;
 use App\Jobs\ArticleParser;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+//        $this->app->bind(ArticleReaderInterface::class, function ($app) {
+//            return new ClicknPayStripeGateway(config('services.clicknpay_stripe.publisher_key'), 'USD');
+//        });
     }
 }

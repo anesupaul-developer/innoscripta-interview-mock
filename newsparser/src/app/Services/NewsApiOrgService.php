@@ -11,7 +11,11 @@ class NewsApiOrgService implements ArticleReaderInterface
 
     public function send(mixed $article): void
     {
-        ArticleParser::dispatch($this->formatter($article));
+        $payload = $this->formatter($article);
+
+        echo "Processing".PHP_EOL;
+
+        dispatch(new ArticleParser($payload));
     }
 
     public function formatter(mixed $payload): array
