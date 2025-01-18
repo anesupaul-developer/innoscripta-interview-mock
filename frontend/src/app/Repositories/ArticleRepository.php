@@ -4,10 +4,11 @@ namespace App\Repositories;
 
 use App\Contracts\ArticleRepositoryInterface;
 use App\Models\Article as ArticleModel;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ArticleRepository implements ArticleRepositoryInterface
 {
-    public function index()
+    public function index(): LengthAwarePaginator
     {
         $perPage = request()->query('perPage') ?? 9;
 
@@ -15,7 +16,17 @@ class ArticleRepository implements ArticleRepositoryInterface
 
         $search = request()->query('q');
 
-        return ArticleModel::paginate($perPage);
+        return ArticleModel::query()
+            ->when($category, function ($query, $category) {
+                return $query->where('category', $category);
+            })
+            ->when($search, function ($query, $searchTerm) {
+                return $query->where(function ($query) use ($searchTerm) {
+                    $query->where('title', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                });
+            })
+            ->paginate($perPage);
     }
 
     public function getById($id)
