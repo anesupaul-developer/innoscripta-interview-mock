@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Article;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\DB;
 
 class OnNewArticleGenerated implements ShouldQueue
 {
@@ -17,8 +19,16 @@ class OnNewArticleGenerated implements ShouldQueue
     {
         $this->payload = $this->data ?? $this->payload;
 
-        $article = Article::create($this->payload);
+        $exists = DB::table('articles')
+            ->where('source', $this->payload['source'])
+            ->where('title', $this->payload['title'])
+            ->where('published_at', $this->payload['published_at'])
+            ->exists();
 
-        echo 'Article '.$article->id.' has been created';
+        if (! $exists) {
+            $article = Article::create($this->payload);
+
+            echo 'Article '.$article->id.' has been created'.PHP_EOL;
+        }
     }
 }

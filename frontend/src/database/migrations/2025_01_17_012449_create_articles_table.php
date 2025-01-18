@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('source')->nullable();
             $table->string('author')->nullable();
+            $table->string('category')->nullable();
             $table->string('title');
             $table->longText('description');
             $table->string('url')->nullable();
             $table->longText('image_url')->nullable();
-            $table->timestamp('published_at')->nullable();
+            $table->unsignedBigInteger('published_at')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
