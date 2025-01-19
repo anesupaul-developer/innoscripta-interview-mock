@@ -5,7 +5,7 @@
                 <label for="categories" class="block mb-2 text-md font-medium text-gray-900 dark:text-white">
                     Select your favourite categories
                 </label>
-                <select id="categories" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <select @change="getAllCategories($event)" id="categories" v-model="selectedCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option value="">All Categories</option>
                     <option v-for="category in categories" :key="category" :value="category">
                         {{ category }}
@@ -153,6 +153,14 @@ export default {
             }
         });
 
+        const getAllCategories = (event) => {
+            const category = event.target.value;
+            console.log(event.target);
+            if (!category) {
+                getFilteredArticles('', searchQuery.value, '');
+            }
+        }
+
         const handlePagination = (link) => {
             if (link.url) {
                 const apiUrl = link.url+'&q='+searchQuery.value+'&category='+selectedCategory.value;
@@ -185,6 +193,7 @@ export default {
             currentPage,
             totalPages,
             postObject,
+            getAllCategories,
             handlePagination
         };
     },

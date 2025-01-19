@@ -24,3 +24,6 @@ produce_articles:
 
 consume_articles:
 	docker exec -it frontend-php-1 php artisan queue:work
+
+db_clean:
+	docker exec -it frontend-php-1 php artisan migrate:fresh
