@@ -22,8 +22,8 @@ class ArticleRepository implements ArticleRepositoryInterface
             })
             ->when($search, function ($query, $searchTerm) {
                 return $query->where(function ($query) use ($searchTerm) {
-                    $query->where('title', 'like', '%' . $searchTerm . '%')
-                        ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                    $query->where('title', 'like', '%'.$searchTerm.'%')
+                        ->orWhere('description', 'like', '%'.$searchTerm.'%');
                 });
             })
             ->paginate($perPage);
