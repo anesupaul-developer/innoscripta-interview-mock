@@ -20,7 +20,9 @@ class NewYorkTimesArticleCommand extends ArticleCommand
             foreach ($items['response']['docs'] as $payload) {
                 $imgBaseUrl = 'https://static01.nyt.com/';
 
-                $path = collect($payload['multimedia'])->first()['url'];
+                $path = collect($payload['multimedia'])->first();
+
+                $imageUrl = isset($path['url']) ? str($imgBaseUrl)->append($path['url'])->toString() : null;
                 $article = [
                     'source' => $payload['source'],
                     'author' => $payload['byline']['original'],
@@ -28,7 +30,7 @@ class NewYorkTimesArticleCommand extends ArticleCommand
                     'description' => $payload['lead_paragraph'],
                     'category' => $payload['type_of_material'],
                     'url' => $payload['web_url'],
-                    'image_url' => str($imgBaseUrl)->append($path)->toString(),
+                    'image_url' => $imageUrl,
                     'published_at' => Carbon::parse($payload['pub_date'])->getTimestamp(),
                 ];
 

@@ -1,24 +1,26 @@
 COMPOSE_PROJECT_NAME := application
 
-prod:
-	docker-compose --env-file=./newsaggregatorservice/src/.env \
- 		-f newsaggregatorservice/infrastructure/docker-compose.yml \
+start_parser:
+	docker-compose --env-file=./newsparser/src/.env \
+ 		-f ./newsparser/docker-compose.yml \
 		up -d --build --remove-orphans
-	docker exec -it newsphp mkdir -p "../newsaggregatorservice/infrastructure/db"
-	docker exec -it newsphp chmod -R 777 .
-	docker exec -it newsphp composer install
-	docker exec -it newsphp bash -c 'php artisan key:generate'
-	docker exec -it newsphp bash -c 'php artisan migrate'
-	docker exec -it newsphp bash -c 'php artisan db:seed'
+	docker exec -it newsparser-php-1 composer install
+	docker exec -it newsparser-php-1 php artisan key:generate
+	docker exec -it newsparser-php-1 php artisan migrate
 
-test:
-	#docker-compose --env-file=./src/.env \
-#		-f infrastructure/docker-compose-test.yml \
-#		up -d --build --remove-orphans
-#	docker exec -it application_php81test mkdir -p "../infrastructure/dbtest"
-#	docker exec -it application_php81test chmod -R 777 .
-#	docker exec -it application_php81test composer install
-#	docker exec -it application_php81test bash -c 'php artisan key:generate'
-#	docker exec -it application_php81test bash -c 'php artisan migrate:refresh'
-#	docker exec -it application_php81test bash -c 'php artisan db:seed'
-#	docker exec -it application_php81test bash -c 'php artisan test'
+start_app:
+	docker-compose --env-file=./frontend/src/.env \
+ 		-f ./frontend/docker-compose.yml \
+		up -d --build --remove-orphans
+	docker exec -it frontend-php-1 composer install
+	docker exec -it frontend-php-1 php artisan key:generate
+	docker exec -it frontend-php-1 php artisan migrate
+	cd frontend/src && docker-compose run npm install && docker-compose run npm run build
+
+produce_articles:
+	docker exec -it newsparser-php-1 php artisan app:nyt-articles
+	docker exec -it newsparser-php-1 php artisan app:guardian-articles
+	docker exec -it newsparser-php-1 php artisan app:news-org-articles
+
+consume_articles:
+	docker exec -it frontend-php-1 php artisan queue:work

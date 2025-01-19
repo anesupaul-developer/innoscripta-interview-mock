@@ -21,7 +21,6 @@ services:
     depends_on:
       - php
       - mysql
-      - mailhog
     networks:
       - laravel
 
@@ -30,12 +29,12 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "33061:3306"
+      - "33063:3306"
     environment:
-      MYSQL_DATABASE: homestead
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     networks:
@@ -94,13 +93,5 @@ services:
     depends_on:
       - mysql
     entrypoint: [ 'php', '/var/www/html/artisan' ]
-    networks:
-      - laravel
-
-  mailhog:
-    image: mailhog/mailhog:latest
-    ports:
-      - "1025:1025"
-      - "8025:8025"
     networks:
       - laravel
