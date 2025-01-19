@@ -20,6 +20,8 @@ final class ApiTransformClass
 
     public int|string|null $prev_page;
 
+    public array $links = [];
+
     public function __construct(LengthAwarePaginator $paginator, $data = [])
     {
         $this->total = $paginator->total();
@@ -31,6 +33,8 @@ final class ApiTransformClass
         $this->prev_page = $this->current_page - 1;
 
         $this->next_page = $this->getNextPage($paginator);
+
+        $this->links = $paginator->linkCollection()->toArray();
 
         $this->items = $data;
 

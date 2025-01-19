@@ -57,21 +57,58 @@
             </div>
         </div>
 
-        <div class="pagination">
-            <button
-                :disabled="currentPage === 1"
-                @click="currentPage--"
-            >
-                Prev
-            </button>
-            <span>{{ currentPage }}</span>
-            <button
-                :disabled="currentPage === totalPages"
-                @click="currentPage++"
-            >
-                Next
-            </button>
-        </div>
+<!--        <div class="pagination">-->
+<!--            <button-->
+<!--                :disabled="currentPage === 1"-->
+<!--                @click="currentPage&#45;&#45;"-->
+<!--            >-->
+<!--                Prev-->
+<!--            </button>-->
+<!--            <span>{{ currentPage }}</span>-->
+<!--            <button-->
+<!--                :disabled="currentPage === totalPages"-->
+<!--                @click="currentPage++"-->
+<!--            >-->
+<!--                Next-->
+<!--            </button>-->
+<!--        </div>-->
+
+        <nav class="w-full flex justify-center items-center mt-5" aria-label="Page navigation example">
+            <ul class="flex items-center justify-center w-full h-10 text-base">
+                <li>
+                    <a href="#" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <span class="sr-only">Previous</span>
+                        <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                        </svg>
+                    </a>
+                </li>
+
+                <div v-for="link in postObject.links">
+                    <li v-if="link.url">
+                        <a href="#" @click="handlePagination(link)" :aria-current="link.active? 'page' : ''" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{link.label.replace(' &raquo;', '').replace('&laquo; ', '')}}
+                        </a>
+                    </li>
+
+                    <li v-else>
+                        <a href="#" @click="handlePagination(link)" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            <span class="sr-only">{{link.label.replace(' &raquo;', '').replace('&laquo; ', '')}}</span>
+                        </a>
+                    </li>
+                </div>
+
+
+                <li>
+                    <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <span class="sr-only">Next</span>
+                        <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -94,7 +131,7 @@ export default {
         onMounted(async () => {
             try {
                 const [postsResponse, categoriesResponse] = await Promise.all([
-                    axios.get('http://localhost:8081/api/v1/articles?perPage=10'),
+                    axios.get('http://localhost:8081/api/v1/articles?perPage=9'),
                     axios.get('http://localhost:8081/api/v1/categories'),
                 ]);
 
@@ -117,20 +154,25 @@ export default {
 
         watch(searchQuery, (newQuery) => {
             if (newQuery) {
-                getFilteredArticles(newQuery, '');
+                getFilteredArticles('', newQuery, '');
             }
         });
 
         watch(selectedCategory, (newQuery) => {
             if (newQuery) {
-                getFilteredArticles('', newQuery);
+                getFilteredArticles('', '', newQuery);
             }
         });
 
-        const getFilteredArticles = async (query, category) => {
+        const handlePagination = (link) => {
+            getFilteredArticles(link.url);
+        }
+
+        const getFilteredArticles = async (url, query, category) => {
             try {
+                const apiUrl = url ? url : 'http://localhost:8081/api/v1/articles?perPage='+postsPerPage+'&q='+query+'&category='+category
                 const [postsResponse] = await Promise.all([
-                    axios.get('http://localhost:8081/api/v1/articles?perPage=9&q='+query+'&category='+category),
+                    axios.get(url),
                 ]);
 
                 postObject.value = postsResponse.data;
@@ -149,6 +191,8 @@ export default {
             selectedCategory,
             currentPage,
             totalPages,
+            postObject,
+            handlePagination
         };
     },
 };
