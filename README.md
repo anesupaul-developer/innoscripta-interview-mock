@@ -10,7 +10,10 @@ Follow the steps below to set up and run the project locally:
    Run the following command to switch to the `add-vue` branch:  
    `git checkout add-vue`
 
-3. **Set up environment variables**  
+3. **Set up environment variables**
+
+   *Do this for both frontend/src and newsparser/src*
+
    Copy the `.env.example` file to `.env` and set up your environment variables:  
    `cp .env.example .env`
 
@@ -32,5 +35,7 @@ Follow the steps below to set up and run the project locally:
 
 8. **Check articles in your browser**  
    Navigate back to your browser and see the articles.
+
+9. Demo video is on `https://youtu.be/iLiEpw9nZms`
 
 Enjoy working with the application!
