@@ -98,7 +98,6 @@
                     </li>
                 </div>
 
-
                 <li>
                     <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         <span class="sr-only">Next</span>
@@ -165,14 +164,18 @@ export default {
         });
 
         const handlePagination = (link) => {
-            getFilteredArticles(link.url);
+            if (link.url) {
+                const apiUrl = link.url+'&q='+searchQuery.value+'&category='+selectedCategory.value;
+                getFilteredArticles(apiUrl);
+            }
         }
 
         const getFilteredArticles = async (url, query, category) => {
             try {
-                const apiUrl = url ? url : 'http://localhost:8081/api/v1/articles?perPage='+postsPerPage+'&q='+query+'&category='+category
+                const apiUrl = url ? url : 'http://localhost:8081/api/v1/articles?perPage=9&q='+query+'&category='+category;
+                console.log(apiUrl);
                 const [postsResponse] = await Promise.all([
-                    axios.get(url),
+                    axios.get(apiUrl),
                 ]);
 
                 postObject.value = postsResponse.data;
