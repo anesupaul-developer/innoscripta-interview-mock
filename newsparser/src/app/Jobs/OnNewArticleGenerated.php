@@ -15,6 +15,7 @@ class OnNewArticleGenerated implements ShouldQueue
     {
         $this->data = $data;
     }
+
     public function handle(): void
     {
         echo 'Hello from NewsParser MicroService'.PHP_EOL;

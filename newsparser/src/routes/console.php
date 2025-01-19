@@ -6,12 +6,12 @@ use App\Console\Commands\NewYorkTimesArticleCommand;
 
 Schedule::command(GuardianArticleCommand::class)
     ->withoutOverlapping()
-    ->daily();
+    ->hourly();
 
 Schedule::command(NewsApiArticleCommand::class)
     ->withoutOverlapping()
-    ->daily();
+    ->hourly();
 
 Schedule::command(NewYorkTimesArticleCommand::class)
     ->withoutOverlapping()
-    ->daily();
+    ->hourly();

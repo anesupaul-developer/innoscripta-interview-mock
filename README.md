@@ -1,1 +1,36 @@
-# innoscripta-interview-mock
+# Project Setup and Instructions
+
+Follow the steps below to set up and run the project locally:
+
+1. **Clone the repository**  
+   Clone the repository from the following link:  
+   `git clone https://github.com/anesupaul-developer/innoscripta-interview-mock`
+
+2. **Checkout the correct branch**  
+   Run the following command to switch to the `add-vue` branch:  
+   `git checkout add-vue`
+
+3. **Set up environment variables**  
+   Copy the `.env.example` file to `.env` and set up your environment variables:  
+   `cp .env.example .env`
+
+4. **Start the parser and app**  
+   Inside the root folder containing the `Makefile`, run the following commands:  
+   `make start_parser`  
+   `make start_app`
+
+5. **Open the application in your browser**  
+   Navigate to `http://localhost:8081` in your browser.
+
+6. **Produce articles**  
+   Run the following command to produce articles:  
+   `make produce_articles`
+
+7. **Consume articles**  
+   Run the following command to consume articles:  
+   `make consume_articles`
+
+8. **Check articles in your browser**  
+   Navigate back to your browser and see the articles.
+
+Enjoy working with the application!
