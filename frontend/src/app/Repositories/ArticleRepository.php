@@ -26,6 +26,7 @@ class ArticleRepository implements ArticleRepositoryInterface
                         ->orWhere('description', 'like', '%'.$searchTerm.'%');
                 });
             })
+            ->orderBy('id', 'desc')
             ->paginate($perPage);
     }
 
