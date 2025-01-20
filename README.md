@@ -7,8 +7,8 @@ Follow the steps below to set up and run the project locally:
    `git clone https://github.com/anesupaul-developer/innoscripta-interview-mock`
 
 2. **Checkout the correct branch**  
-   Run the following command to switch to the `add-vue` branch:  
-   `git checkout add-vue`
+   Run the following command to switch to the `main` branch:  
+   `git checkout main`
 
 3. **Set up environment variables**
 
